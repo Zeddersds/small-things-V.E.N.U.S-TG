@@ -4,6 +4,7 @@
 	description = "Naturally found in the crocus and gardenia flowers, this drug acts as a natural and safe aphrodisiac."
 	taste_description = "strawberries"
 	color = "#FFADFF"
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
 	life_pref_datum = /datum/preference/toggle/erp/aphro
 	arousal_adjust_amount = 1
 	pleasure_adjust_amount = 0
