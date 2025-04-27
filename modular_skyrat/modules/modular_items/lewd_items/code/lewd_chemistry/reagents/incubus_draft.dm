@@ -10,9 +10,7 @@
 	name = "incubus draft"
 	description = "A volatile collodial mixture derived from various masculine solutions that encourages a larger gentleman's package via a potent testosterone mix."
 	color = "#888888"
-	// VENUS EDIT Start
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	// VENUS EDIT End
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED // VENUS EDIT
 	taste_description = "chinese dragon powder"
 	overdose_threshold = 20 // ODing makes you male and shrinks female genitals if gender change prefs are enabled. Otherwise, grows a cock.
 	metabolization_rate = 0.25
