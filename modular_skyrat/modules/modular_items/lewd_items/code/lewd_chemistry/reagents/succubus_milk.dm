@@ -11,9 +11,7 @@
 	name = "succubus milk"
 	description = "A volatile collodial mixture derived from milk that encourages mammary production via a potent estrogen mix."
 	color = "#E60584"
-	// VENUS EDIT Start
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED
-	// VENUS EDIT End
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED // VENUS EDIT
 	taste_description = "a milky ice cream like flavour"
 	overdose_threshold = 20
 	metabolization_rate = 0.25
