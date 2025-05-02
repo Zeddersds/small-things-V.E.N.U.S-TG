@@ -8,7 +8,7 @@
 	name = "belladine nectar"
 	description = "A volatile collodial mixture that encourages abdominal expansion via a potent gastric mix."
 	color = "#01ff63"
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED // VENUS EDIT
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED //VENUS ADDITION
 	taste_description = "blueberry gum"
 	overdose_threshold = 17
 	metabolization_rate = 0.25
