@@ -8,7 +8,7 @@
 	name = "denbu tincture"
 	description = "A mixture of natural vitamins and valentines plant extract, causing butt enlargement in humanoids."
 	color = "#e8ff1b"
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED // VENUS EDIT
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED //VENUS ADDITION
 	taste_description = "butter with a sweet aftertaste"
 	overdose_threshold = 17
 	metabolization_rate = 0.25
