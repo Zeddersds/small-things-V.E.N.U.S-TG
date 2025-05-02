@@ -7,7 +7,7 @@
 					Addiction withdrawals can cause brain damage and shortness of breath. Overdose can lead to brain traumas."
 	taste_description = "liquid desire"
 	color = "#FF2BFF"
-	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED // VENUS EDIT
+	chemical_flags = REAGENT_CAN_BE_SYNTHESIZED //VENUS ADDITION
 	overdose_threshold = 25
 	overdose_pref_datum = /datum/preference/toggle/erp/bimbofication
 	emote_probability = 5
