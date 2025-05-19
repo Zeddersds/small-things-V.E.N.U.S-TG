@@ -2,7 +2,6 @@
 	// Remove traits
 	inherent_traits -= list(
 		TRAIT_NOBREATH,
-		TRAIT_OXYIMMUNE,
 		TRAIT_VIRUSIMMUNE,
 	)
 	//VENUS ADDITION START (No thirst for hemophages)

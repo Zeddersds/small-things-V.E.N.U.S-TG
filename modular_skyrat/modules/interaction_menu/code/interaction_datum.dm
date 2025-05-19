@@ -101,6 +101,7 @@ GLOBAL_LIST_EMPTY_TYPED(interaction_instances, /datum/interaction)
 	var/msg = pick(message)
 	// We replace %USER% with nothing because manual_emote already prepends it.
 	msg = trim(replacetext(replacetext(msg, "%TARGET%", "[target]"), "%USER%", ""), INTERACTION_MAX_CHAR)
+	msg = autopunct_bare(msg) //VENUS ADDITION: Ensure punctuation for messages
 	if(lewd)
 		//VENUS EDIT: msg -> span_lewd(msg) to give it the lewd color
 		user.emote("subtle", null, span_lewd(msg), TRUE)
@@ -109,11 +110,13 @@ GLOBAL_LIST_EMPTY_TYPED(interaction_instances, /datum/interaction)
 	if(user_messages.len)
 		var/user_msg = pick(user_messages)
 		user_msg = replacetext(replacetext(user_msg, "%TARGET%", "[target]"), "%USER%", "[user]")
-		to_chat(user, user_msg)
+		user_msg = autopunct_bare(user_msg) //VENUS ADDITION: Ensure punctuation for messages
+		to_chat(user, span_love(user_msg)) //VENUS ADDITION: Added span_love to the user_messages
 	if(target_messages.len)
 		var/target_msg = pick(target_messages)
 		target_msg = replacetext(replacetext(target_msg, "%TARGET%", "[target]"), "%USER%", "[user]")
-		to_chat(target, target_msg)
+		target_msg = autopunct_bare(target_msg) //VENUS ADDITION: Ensure punctuation for messages
+		to_chat(target, span_love(target_msg)) //VENUS ADDITION: Added span_love to the target_messages
 	if(sound_use)
 		if(!sound_possible)
 			message_admins("Interaction has sound_use set to TRUE but does not set sound! '[name]'")

@@ -41,6 +41,11 @@
 	min_val = 0
 	max_val = 100
 // VENUS ADDITION END
+// Intensity of dirt generation for SSDecay (1-4) or set to 5 for random
+/datum/config_entry/number/ssdecay_intensity
+	default = 5
+	max_val = 5
+	min_val = 1
 
 // Turn on/off guncargo permit-locked firing pins
 /datum/config_entry/flag/permit_pins

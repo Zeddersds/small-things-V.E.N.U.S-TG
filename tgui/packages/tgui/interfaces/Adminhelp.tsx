@@ -44,17 +44,17 @@ export const Adminhelp = (props) => {
             <TextArea
               autoFocus
               height="100%"
-              value={ahelpMessage}
+              fluid
               // VENUS EDIT: Original placeholder: "Admin help"
               placeholder="Admin help: Don't use this for bug reports, gameplay questions (use Wiki, mentorhelp or #game-help Discord channel), or trivial in-character requests (use Pray command). See rules for full details."
-              onChange={(e, value) => setAhelpMessage(value)}
+              onChange={setAhelpMessage}
             />
           </Stack.Item>
           {urgentAhelpEnabled && adminCount <= 0 && (
             <Stack.Item>
               <NoticeBox info>
                 {urgentAhelpPromptMessage}
-                {(currentlyInputting && (
+                {currentlyInputting ? (
                   <Box
                     mt={1}
                     width="100%"
@@ -69,7 +69,7 @@ export const Adminhelp = (props) => {
                       placeholder="Confirmation Prompt"
                       autoFocus
                       fluid
-                      onChange={(e, value) => {
+                      onChange={(value) => {
                         if (value === confirmationText) {
                           setRequestForAdmin(true);
                         }
@@ -77,7 +77,7 @@ export const Adminhelp = (props) => {
                       }}
                     />
                   </Box>
-                )) || (
+                ) : (
                   <Button
                     mt={1}
                     onClick={() => {
@@ -108,7 +108,6 @@ export const Adminhelp = (props) => {
             <Button
               color="good"
               fluid
-              content="Submit"
               textAlign="center"
               onClick={() =>
                 act('ahelp', {
@@ -116,7 +115,9 @@ export const Adminhelp = (props) => {
                   message: ahelpMessage,
                 })
               }
-            />
+            >
+              Submit
+            </Button>
           </Stack.Item>
         </Stack>
       </Window.Content>

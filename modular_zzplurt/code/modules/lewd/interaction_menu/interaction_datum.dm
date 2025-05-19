@@ -264,6 +264,7 @@
 		message = replacetext(message, "%CAME_IN_THEM%", "[came_in_them]")
 		message = replacetext(message, "%CUM_GENITAL%", "[genital_used]")
 		message = replacetext(message, "%CUM_TARGET%", "[hole_used]")
+		message = autopunct_bare(message) //VENUS ADDITION: Ensure punctuation for lewd messages
 
 		var/self_message = pick(cum_self_text_overrides[position])
 		self_message = replacetext(self_message, "%CUMMING%", "[cumming]")
@@ -274,6 +275,7 @@
 		self_message = replacetext(self_message, "%CAME_IN_THEM%", "[came_in_them]")
 		self_message = replacetext(self_message, "%CUM_GENITAL%", "[genital_used]")
 		self_message = replacetext(self_message, "%CUM_TARGET%", "[hole_used]")
+		self_message = autopunct_bare(self_message) //VENUS ADDITION: Ensure punctuation for lewd messages
 
 		cumming.visible_message(span_userlove(message), span_userlove(self_message))
 
@@ -287,6 +289,7 @@
 			partner_message = replacetext(partner_message, "%CAME_IN_THEM%", "[came_in_them]")
 			partner_message = replacetext(partner_message, "%CUM_GENITAL%", "[genital_used]")
 			partner_message = replacetext(partner_message, "%CUM_TARGET%", "[hole_used]")
+			partner_message = autopunct_bare(partner_message) //VENUS ADDITION: Ensure punctuation for lewd messages
 
 			to_chat(came_in, span_userlove(partner_message))
 		return TRUE

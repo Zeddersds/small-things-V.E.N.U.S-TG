@@ -35,15 +35,14 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 	/// Displayed name of the loadout item.
 	/// Defaults to the item's name if unset.
 	var/name
+	/// Title of a group that this item will be bundled under
+	/// Defaults to parent category's title if unset
+	var/group = null
 	/// Whether this item has greyscale support.
 	/// Only works if the item is compatible with the GAGS system of coloring.
 	/// Set automatically to TRUE for all items that have the flag [IS_PLAYER_COLORABLE_1].
 	/// If you really want it to not be colorable set this to [DONT_GREYSCALE]
 	var/can_be_greyscale = FALSE
-
-	/// VENUS ADDITION START: Whether this item can be simple-colored. (Changes color var directly)
-	var/can_be_colored = TRUE
-	/// VENUS ADDITION END
 
 	/// Whether this item can be renamed.
 	/// I recommend you apply this sparingly becuase it certainly can go wrong (or get reset / overridden easily)
@@ -55,8 +54,6 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 	var/abstract_type = /datum/loadout_item
 	/// The actual item path of the loadout item.
 	var/obj/item/item_path
-	/// Lazylist of additional "information" text to display about this item.
-	var/list/additional_displayed_text
 	/// Icon file (DMI) for the UI to use for preview icons.
 	/// Set automatically if null
 	var/ui_icon
@@ -137,12 +134,6 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 			if(can_be_greyscale)
 				return set_item_color(manager, user)
 
-		//VENUS EDIT ADDITION START: Simple item color (changes color var directly)
-		if("select_simple_color")
-			if(can_be_colored && !can_be_greyscale)
-				return set_item_simple_color(manager, user)
-		//VENUS EDIT ADDITION END
-
 		if("set_name")
 			if(can_be_named)
 		// SKYRAT EDIT BEGIN - Description
@@ -157,27 +148,6 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 			return set_skin(manager, user, params)
 
 	return TRUE
-
-//VENUS ADDITION START: Simple item color (changes color var directly)
-/// Opens a color picker for directly coloring the item.
-/datum/loadout_item/proc/set_item_simple_color(datum/preference_middleware/loadout/manager, mob/user)
-	var/list/loadout = manager.get_current_loadout()
-	if(!loadout?[item_path])
-		return FALSE
-
-	var/current_color = loadout[item_path][INFO_COLOR] || "#FFFFFF"
-	var/new_color = tgui_color_picker(user, "Choose a color for [name]:", "Color Selection", current_color)
-	if(!new_color)
-		return FALSE
-
-	loadout = manager.get_current_loadout() // Make sure no shenanigans happened
-	if(!loadout?[item_path])
-		return FALSE
-
-	loadout[item_path][INFO_COLOR] = new_color
-	manager.save_current_loadout(loadout)
-	return TRUE  // update UI
-//VENUS ADDITION END
 
 /// Opens up the GAGS editing menu.
 /datum/loadout_item/proc/set_item_color(datum/preference_middleware/loadout/manager, mob/user)
@@ -319,12 +289,6 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 		equipped_item.set_greyscale(item_details[INFO_GREYSCALE])
 		update_flag |= equipped_item.slot_flags
 
-	// VENUS ADDITION START: Simple item color (changes color var directly)
-	if(can_be_colored && item_details?[INFO_COLOR])
-		equipped_item.color = item_details[INFO_COLOR]
-		update_flag |= equipped_item.slot_flags
-	// VENUS ADDITION END
-
 	// SKYRAT EDIT BEGIN - DESCRIPTIONS~
 	if(can_be_named && !visuals_only)
 		var/renamed = 0
@@ -368,56 +332,58 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 	SHOULD_CALL_PARENT(TRUE)
 
 	var/list/formatted_item = list()
+	var/list/information = list()
+	var/list/fetched_info = get_item_information()
+	for (var/icon_name in fetched_info)
+		information += list(list(
+			"icon" = icon_name,
+			"tooltip" = fetched_info[icon_name]
+		))
+
 	formatted_item["name"] = name
+	formatted_item["group"] = group || category.category_name
 	formatted_item["path"] = item_path
-	formatted_item["information"] = get_item_information()
+	formatted_item["information"] = information
 	formatted_item["buttons"] = get_ui_buttons()
 	formatted_item["reskins"] = get_reskin_options()
 	formatted_item["icon"] = ui_icon
 	formatted_item["icon_state"] = ui_icon_state
-
-	// SKYRAT EDIT BEGIN - Extra loadout stuff
-	formatted_item["ckey_whitelist"] = ckeywhitelist
-	formatted_item["donator_only"] = donator_only
-	formatted_item["restricted_roles"] = restricted_roles
-	formatted_item["blacklisted_roles"] = blacklisted_roles
-	// SKYRAT EDIT END
+	formatted_item["ckey_whitelist"] = ckeywhitelist // BUBBER EDIT ADDITION: Filter ckey-locked items
 
 	return formatted_item
 
 /**
  * Returns a list of information to display about this item in the loadout UI.
- *
- * These should be short strings, sub 14 characters generally.
+ * Icon -> tooltip displayed when its hovered over
  */
 /datum/loadout_item/proc/get_item_information() as /list
 	SHOULD_CALL_PARENT(TRUE)
 
+	// Mothblocks is hellbent on recolorable and reskinnable being only tooltips for items for visual clarity, so ask her before changing these
 	var/list/displayed_text = list()
-
-	displayed_text += (additional_displayed_text || list())
-
 	if(can_be_greyscale)
-		displayed_text += "Recolorable"
-
-	if(can_be_named)
-		displayed_text += "Renamable"
+		displayed_text[FA_ICON_PALETTE] = "Recolorable"
 
 	if(can_be_reskinned)
-		displayed_text += "Reskinnable"
+		displayed_text[FA_ICON_SWATCHBOOK] = "Reskinnable"
 
 	// SKYRAT EDIT ADDITION
 	if(donator_only)
-		displayed_text += "Donator only"
+		displayed_text[FA_ICON_MONEY_BILL] = "Donator only"
 
 	if(ckeywhitelist)
-		displayed_text += "Unique"
+		displayed_text[FA_ICON_LOCK] = "Player Whitelist: [ckeywhitelist.Join(", ")]"
 
 	if(restricted_roles || blacklisted_roles)
-		displayed_text += "Role restricted"
+		var/list/tooltip_text = list()
+		if(restricted_roles)
+			tooltip_text += "Job Whitelist: [restricted_roles.Join(", ")]"
+		if(blacklisted_roles)
+			tooltip_text += "Job Blacklist: [blacklisted_roles.Join(", ")]"
+		displayed_text[FA_ICON_TOOLBOX] = tooltip_text.Join("\n")
 
 	if(restricted_species)
-		displayed_text += "Species restricted"
+		displayed_text[FA_ICON_DNA] = "Species Whitelist: [restricted_species.Join(", ")]"
 	// SKYRAT EDIT ADDITION
 	return displayed_text
 
@@ -446,16 +412,6 @@ GLOBAL_LIST_INIT(all_loadout_categories, init_loadout_categories())
 			"button_icon" = FA_ICON_PALETTE,
 			"active_key" = INFO_GREYSCALE,
 		))
-
-	// VENUS ADDITION START: Simple item color (changes color var directly)
-	if(can_be_colored && !can_be_greyscale)
-		UNTYPED_LIST_ADD(button_list, list(
-			"label" = "Simple recolor",
-			"act_key" = "select_simple_color",
-			"button_icon" = FA_ICON_PALETTE,
-			"active_key" = INFO_COLOR,
-		))
-	// VENUS ADDITION END
 
 	if(can_be_named)
 		UNTYPED_LIST_ADD(button_list, list(
