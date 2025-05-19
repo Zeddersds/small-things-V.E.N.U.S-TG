@@ -48,7 +48,7 @@
 		TRAIT_ROCK_EATER,
 		TRAIT_STABLEHEART, // TODO: handle orchestrator code
 		TRAIT_NOHUNGER, // They will have metal stored in the stomach. Fuck nutrition code.
-		TRAIT_NOTHIRST, //VENUS ADDITION: Proteons cant hydrate to remove thirst
+		TRAIT_NOTHIRST, //VENUS ADDITION: Make sure Proteans don't get thirsty
 		TRAIT_LIMBATTACHMENT,
 
 		// Synthetic lifeforms
