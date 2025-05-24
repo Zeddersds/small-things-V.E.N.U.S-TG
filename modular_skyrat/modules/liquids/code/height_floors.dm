@@ -42,7 +42,7 @@
 	icon = 'modular_skyrat/modules/liquids/icons/turf/pool_tile.dmi'
 	base_icon_state = "pool_tile"
 	icon_state = "pool_tile"
-	liquid_height = -30
+	liquid_height = -50
 	turf_height = -30
 
 /turf/open/floor/iron/pool/rust_heretic_act()
